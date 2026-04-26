@@ -11,14 +11,17 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default-fallback-secret-key-for-testing")
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=12)
 
 
 app.config.from_object(config)
 
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'static', 'uploads')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/app.db"
+os.makedirs(os.path.join(BASE_DIR, 'instance'), exist_ok=True)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(BASE_DIR, "instance", "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
