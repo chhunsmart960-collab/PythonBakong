@@ -11,6 +11,7 @@ from models.cart_item import CartItem
 def get_or_create_cart():
     cart_id = session.get("cart_id")
 
+
     cart = None
 
     if cart_id:
@@ -21,6 +22,7 @@ def get_or_create_cart():
 
     if not cart:
         cart = Cart(status=0)
+        cart.user_id = session.get("user_id")
         db.session.add(cart)
         db.session.commit()
         session["cart_id"] = cart.id

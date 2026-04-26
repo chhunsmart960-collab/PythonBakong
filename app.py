@@ -18,7 +18,8 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=12)
 app.config.from_object(config)
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///app.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/app.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

@@ -1,132 +1,141 @@
 {% extends 'admin/layout/master.html' %}
 
 {% block page_title %}
-	Admin | Orders
+    Admin | Orders
 {% endblock %}
 
 {% block content %}
-<div class="content-wrapper">
+    <div class="content-wrapper">
 
-  <!-- Content Header -->
-  <div class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1 class="m-0">Order Management</h1>
+        <!-- Content Header -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Order Management</h1>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item">
+                                <a href="{{ url_for('dashboards') }}">Home</a>
+                            </li>
+                            <li class="breadcrumb-item active">Orders</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item">
-              <a href="{{ url_for('dashboards') }}">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Orders</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
 
-  <!-- Main content -->
-  <div class="content">
-    <div class="container-fluid">
+                <div class="card p-3">
 
-      <div class="card p-3">
+                    <div class="card-header border-0 pb-0">
+                        <strong style="text-transform: uppercase; letter-spacing: 0.5px; font-size: 14px;">All Recent
+                            Orders</strong>
+                    </div>
 
-        <div class="card-header border-0 pb-0">
-          <strong style="text-transform: uppercase; letter-spacing: 0.5px; font-size: 14px;">All Recent Orders</strong>
-        </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
 
-        <div class="card-body">
-          <div class="table-responsive">
+                            <table class="table table-borderless table-striped mt-3">
+                                <thead>
+                                <tr class="bg-primary text-white">
+                                    <th>No.</th>
+                                    <th>Customer</th>
+                                    <th>Phone</th>
+                                    <th>Total</th>
+                                    <th>Payment</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
 
-            <table class="table table-borderless table-striped mt-3">
-              <thead>
-                <tr class="bg-primary text-white">
-                  <th>No.</th>
-                  <th>Customer</th>
-                  <th>Phone</th>
-                  <th>Total</th>
-                  <th>Payment</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
+                                <tbody>
 
-              <tbody>
+                                {% if orders %}
+                                    {% for order in orders %}
+                                        {% if order.payment_status == 'Paid' %}
 
-                {% if orders %}
-                  {% for order in orders %}
-                  <tr>
-                    <td class="align-middle">{{ loop.index }}</td>
 
-                    <td class="align-middle">
-                      <strong style="text-transform: uppercase; font-size: 14px;">{{ order.customer_name }}</strong><br>
-                      <small style="color: #666;">{{ order.email }}</small>
-                    </td>
+                                            <tr>
+                                                <td class="align-middle">{{ loop.index }}</td>
 
-                    <td class="align-middle" style="font-family: monospace; font-size: 13px;">{{ order.phone }}</td>
+                                                <td class="align-middle">
+                                                    <strong style="text-transform: uppercase; font-size: 14px;">{{ order.customer_name }}</strong><br>
+                                                    <small style="color: #666;">{{ order.email }}</small>
+                                                </td>
 
-                    <td class="align-middle">
-                      <strong style="font-size: 15px;">{{ order.total }} ៛</strong><br>
-                      <small style="color: #666; text-transform: uppercase; letter-spacing: 0.5px;">{{ order.items|length if order.items else 0 }} items</small>
-                    </td>
+                                                <td class="align-middle"
+                                                    style="font-family: monospace; font-size: 13px;">{{ order.phone }}</td>
 
-                    <!-- Payment -->
-                    <td class="align-middle">
+                                                <td class="align-middle">
+                                                    <strong style="font-size: 15px;">{{ order.total }} ៛</strong><br>
+                                                    <small style="color: #666; text-transform: uppercase; letter-spacing: 0.5px;">{{ order.items|length if order.items else 0 }}
+                                                        items</small>
+                                                </td>
+
+                                                <!-- Payment -->
+                                                <td class="align-middle">
                       <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #f9f9f9; display: inline-block; margin-bottom: 5px;">
                         {{ order.payment_method or 'N/A' }}
                       </span><br>
 
-                      {% if order.payment_status == 'Paid' %}
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #000; background: #000; color: #fff; border-radius: 4px; display: inline-block;">Paid</span>
-                      {% else %}
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #000; background: #fff; color: #000; border-radius: 4px; display: inline-block;">Pending</span>
-                      {% endif %}
-                    </td>
+                                                    {% if order.payment_status == 'Paid' %}
+                                                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #000; background: #000; color: #fff; border-radius: 4px; display: inline-block;">Paid</span>
+                                                    {% else %}
+                                                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #000; background: #fff; color: #000; border-radius: 4px; display: inline-block;">Pending</span>
+                                                    {% endif %}
+                                                </td>
 
-                    <!-- Status -->
-                    <td class="align-middle">
-                      {% if order.status == 'Pending' %}
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px dashed #000; color: #000; border-radius: 4px; display: inline-block;">Pending</span>
-                      {% elif order.status == 'Completed' %}
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #000; background: #000; color: #fff; border-radius: 4px; display: inline-block;">Completed</span>
-                      {% else %}
-                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #e5e5e5; background: #f9f9f9; color: #666; border-radius: 4px; display: inline-block;">
+                                                <!-- Status -->
+                                                <td class="align-middle">
+                                                    {% if order.status == 'Pending' %}
+                                                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px dashed #000; color: #000; border-radius: 4px; display: inline-block;">Pending</span>
+                                                    {% elif order.status == 'Completed' %}
+                                                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #000; background: #000; color: #fff; border-radius: 4px; display: inline-block;">Completed</span>
+                                                    {% else %}
+                                                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #e5e5e5; background: #f9f9f9; color: #666; border-radius: 4px; display: inline-block;">
                           {{ order.status }}
                         </span>
-                      {% endif %}
-                    </td>
+                                                    {% endif %}
+                                                </td>
 
-                    <!-- Date -->
-                    <td class="align-middle">
-                      {% if order.created_at %}
-                        <span style="font-weight: 500;">{{ order.created_at.strftime('%Y-%m-%d') }}</span><br>
-                        <small style="color: #666;">{{ order.created_at.strftime('%H:%M') }}</small>
-                      {% else %}
-                        <span style="color: #999;">N/A</span>
-                      {% endif %}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                {% else %}
-                  <tr>
-                    <td colspan="7" class="text-center" style="padding: 40px !important; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
-                      No orders found
-                    </td>
-                  </tr>
-                {% endif %}
+                                                <!-- Date -->
+                                                <td class="align-middle">
+                                                    {% if order.created_at %}
+                                                        <span style="font-weight: 500;">{{ order.created_at.strftime('%Y-%m-%d') }}</span>
+                                                        <br>
+                                                        <small style="color: #666;">{{ order.created_at.strftime('%H:%M') }}</small>
+                                                    {% else %}
+                                                        <span style="color: #999;">N/A</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" class="text-center"
+                                            style="padding: 40px !important; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
+                                            No orders found
+                                        </td>
+                                    </tr>
+                                {% endif %}
 
-              </tbody>
-            </table>
+                                </tbody>
+                            </table>
 
-          </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
 
-      </div>
-
     </div>
-  </div>
-
-</div>
 {% endblock %}
