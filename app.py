@@ -34,5 +34,7 @@ def before_request():
             flash("Please log in first.", "warning")
             return redirect(url_for("login", next=request.path))
 
+
+
 if __name__ == "__main__":
     app.run()

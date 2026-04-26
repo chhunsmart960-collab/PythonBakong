@@ -1,8 +1,8 @@
 from flask import jsonify, render_template, request, session
 from app import app, db
-from model.product import Product
-from model.cart import Cart
-from model.cart_item import CartItem
+from models.product import Product
+from models.cart import Cart
+from models.cart_item import CartItem
 
 
 # =========================
@@ -59,7 +59,7 @@ def cart():
             }
         })
 
-    return render_template('pageFront/cart.html', items=cart_data, total=total)
+    return render_template('front/cart.html', items=cart_data, total=total)
 
 
 # =========================

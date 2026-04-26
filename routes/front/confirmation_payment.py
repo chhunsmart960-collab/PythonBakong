@@ -1,6 +1,6 @@
 from app import app, render_template
 from flask import session, redirect
-from model import Order, OrderItem, Product
+from models import Order, OrderItem, Product
 
 
 @app.get('/confirmation_payment')
@@ -37,7 +37,7 @@ def confirmation_payment():
     session.pop("checkout", None)
 
     return render_template(
-        'pageFront/confirmation_payment.html',
+        'front/confirmation_payment.html',
         order=order,
         items=items_data,
         invoice=invoice

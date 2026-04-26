@@ -7,10 +7,10 @@ from routes.front.about import about
 from routes.front.qr_payment import qr_payment
 from routes.front.confirmation_payment import confirmation_payment
 
-from routes.admin.Category import *
+from routes.admin.category import *
 from routes.admin.customer import *
-from routes.admin.Dashboard import *
+from routes.admin.dashboard import *
 from routes.admin.order import *
-from routes.admin.Product import *
+from routes.admin.product import *
 from routes.admin.user import *
 from routes.admin.auth import *

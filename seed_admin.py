@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash
 from app import app, db
-from model.user import User
+from models.user import User
 
 with app.app_context():
     admin = User(

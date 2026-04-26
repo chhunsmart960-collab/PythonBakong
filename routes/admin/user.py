@@ -1,8 +1,8 @@
 import os
 from app import app, db
 from flask import request, redirect, render_template, url_for, abort
-from model.user import User,getAllUsers
-from upload_service import save_image
+from models.user import User,getAllUsers
+from services.upload_service import save_image
 from werkzeug.security import generate_password_hash, check_password_hash
 
 @app.get('/admin/user')

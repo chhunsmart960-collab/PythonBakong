@@ -1,6 +1,6 @@
 from flask import render_template, abort
 from app import app
-from model.product import Product
+from models.product import Product
 
 @app.get('/product_details/<int:product_id>')
 def product_details(product_id):
@@ -28,4 +28,4 @@ def product_details(product_id):
         "images": images
     }
 
-    return render_template('pageFront/product_details.html', product=product_data)
+    return render_template('front/product_details.html', product=product_data)

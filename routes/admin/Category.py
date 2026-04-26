@@ -1,6 +1,6 @@
 from app import app, db
 from flask import request, redirect, render_template, url_for, abort
-from model.category import Category, getAllCategories
+from models.category import Category, getAllCategories
 
 
 # List all categories

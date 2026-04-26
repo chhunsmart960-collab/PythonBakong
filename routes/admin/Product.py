@@ -2,9 +2,9 @@ import os
 from app import app, db
 from flask import request, redirect, render_template, url_for, abort
 from sqlalchemy import text
-from model.category import getAllCategories
-from model.product import Product, getProductById, getAllProductlist
-from upload_service import save_image
+from models.category import getAllCategories
+from models.product import Product, getProductById, getAllProductlist
+from services.upload_service import save_image
 
 
 # ---------------------------

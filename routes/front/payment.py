@@ -1,6 +1,6 @@
 from flask import render_template, session, request, redirect, url_for
 from app import app
-from model.cart import Cart
+from models.cart import Cart
 
 
 def get_cart():
@@ -49,7 +49,7 @@ def payment():
 
         if not all([customer_name, email, phone, address]):
             return render_template(
-                'pageFront/payment.html',
+                'front/payment.html',
                 cart_total=total,
                 cart=cart,
                 error="Please fill all fields"
@@ -65,7 +65,7 @@ def payment():
         return redirect(url_for('qr_payment'))
 
     return render_template(
-        'pageFront/payment.html',
+        'front/payment.html',
         cart_total=total,
         cart=cart
     )

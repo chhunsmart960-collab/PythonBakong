@@ -1,7 +1,7 @@
 from app import app,session
 from flask import render_template, request
-from model.product import getAllProductlist
-from model.category import getAllCategories
+from models.product import getAllProductlist
+from models.category import getAllCategories
 
 def normalize_products(products):
     data = []
@@ -29,7 +29,7 @@ def home():
     products = normalize_products(products)
 
     return render_template(
-        'pageFront/home.html',
+        'front/home.html',
         products=products,
         categories=categories,
         selected_category=None
@@ -47,7 +47,7 @@ def products_filter():
         products = [p for p in products if p['category'] == category]
 
     return render_template(
-        'pageFront/home.html',
+        'front/home.html',
         products=products,
         categories=categories,
         selected_category=category

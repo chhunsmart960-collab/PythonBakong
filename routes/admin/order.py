@@ -1,5 +1,5 @@
 from app import app, render_template
-from model.order import Order
+from models.order import Order
 from sqlalchemy.orm import joinedload
 
 @app.get('/admin/order')

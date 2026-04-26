@@ -2,7 +2,7 @@ from flask import url_for,flash,session
 from werkzeug.security import check_password_hash
 from werkzeug.utils import redirect
 
-from model.user import User
+from models.user import User
 from app import app, render_template, request
 
 @app.get('/login')

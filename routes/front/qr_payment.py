@@ -2,8 +2,8 @@ import os
 import qrcode
 from flask import render_template, session, redirect, request, jsonify
 from app import app, db
-from model import Order, OrderItem, Product
-from model.cart import Cart
+from models import Order, OrderItem, Product
+from models.cart import Cart
 from bakong_khqr import KHQR
 
 
@@ -75,7 +75,7 @@ def qr_payment():
 
     qr = khqr.create_qr(
         bank_account='yin_kamlang@bkrt',
-        merchant_name='KaiShop',
+        merchant_name='KeyzStore',
         merchant_city='Phnom Penh',
         amount=float(total),
         currency='KHR',
@@ -90,7 +90,7 @@ def qr_payment():
     qrcode.make(qr).save(f"static/qrcodes/{filename}")
 
     return render_template(
-        'pageFront/qr_payment.html',
+        'front/qr_payment.html',
         qr=qr,
         filename=filename,
         order=order,

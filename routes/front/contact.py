@@ -9,7 +9,7 @@ CHAT_ID = "@kamlangTestbot"
 @app.get('/contact')
 def contact():
     status = request.args.get('status')
-    return render_template('pageFront/contact.html', status=status)
+    return render_template('front/contact.html', status=status)
 
 @app.post('/contact')
 def contact_submit():
