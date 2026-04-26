@@ -1,0 +1,96 @@
+{% extends 'admin/layout/master.html' %}
+{% block page_title %}
+    Admin | Category
+{% endblock %}
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Keyz Store Minimal B&W Admin Overrides */
+.content-wrapper, .content-header, .card, .btn, .table {
+  font-family: 'Inter', sans-serif !important;
+}
+.content-wrapper { background-color: #ffffff !important; }
+h1 { font-weight: 800 !important; text-transform: uppercase; letter-spacing: -1px; color: #000 !important; }
+.breadcrumb-item a { color: #666 !important; font-weight: 500; }
+.breadcrumb-item.active { color: #000 !important; font-weight: 600; }
+.card { border: 1px solid #e5e5e5 !important; border-radius: 4px !important; box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important; background: #ffffff !important; }
+.card-header { border-bottom: 1px solid #e5e5e5 !important; background: #fff !important; padding: 20px !important; border-radius: 4px 4px 0 0 !important; }
+.table { border-bottom: 1px solid #e5e5e5; margin-bottom: 0; }
+.table th, .table td { border-top: 1px solid #e5e5e5 !important; padding: 16px !important; vertical-align: middle !important; color: #000 !important; border-bottom: none !important; }
+.table-striped tbody tr:nth-of-type(odd) { background-color: #f9f9f9 !important; }
+.bg-primary { background-color: #000 !important; }
+.bg-primary th { font-weight: 600 !important; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; color: #fff !important; border: none !important; }
+.btn { text-transform: uppercase; font-weight: 600 !important; letter-spacing: 0.5px; border-radius: 4px !important; transition: all 0.3s ease !important; }
+.btn-outline-primary { border: 1px solid #000 !important; color: #000 !important; background: #fff !important; font-size: 13px !important; padding: 10px 24px !important; }
+.btn-outline-primary:hover { background: #000 !important; color: #fff !important; }
+.btn-sm { font-size: 11px !important; padding: 8px 14px !important; margin-right: 5px; }
+.btn-outline-secondary { border: 1px solid #e5e5e5 !important; color: #000 !important; background: #fff !important; }
+.btn-outline-secondary:hover { border-color: #000 !important; background: #f9f9f9 !important; }
+.btn-outline-danger { border: 1px solid #e5e5e5 !important; color: #666 !important; background: #fff !important; }
+.btn-outline-danger:hover { border-color: #000 !important; background: #000 !important; color: #fff !important; }
+</style>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Categories</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ url_for('dashboards') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Categories</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card p-3">
+                <div class="card-header">
+                    <a href="{{ url_for('form_category', action='add') }}" class="btn btn-outline-primary">
+                        + Add Category
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-striped">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th>No.</th>
+                                    <th>Name</th>
+                                    <th width="200">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in categories %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td class="font-weight-bold">{{ category.name }}</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                           href="{{ url_for('form_category', action='edit', cat_id=category.id) }}">
+                                            Edit
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-danger"
+                                           href="{{ url_for('confirm_category', cat_id=category.id) }}">
+                                            Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

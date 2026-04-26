@@ -1,0 +1,304 @@
+{% extends 'pageFront/master.html' %}
+
+{% block content %}
+<style>
+  :root {
+    --bg: #ffffff;
+    --border: #e5e5e5;
+    --text: #000000;
+    --muted: #666666;
+    --surface: #f9f9f9;
+  }
+
+  .cart-wrapper {
+    max-width: 900px;
+    margin: auto;
+    padding: 80px 20px;
+    min-height: 60vh;
+  }
+
+  .cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 16px;
+  }
+
+  .cart-title {
+    font-size: 32px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    margin: 0;
+  }
+
+  .cart-count {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cart-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .cart-left img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    background: var(--surface);
+    border-radius: 4px;
+  }
+
+  .cart-name {
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .cart-price {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .qty-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    width: max-content;
+  }
+
+  .qty-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+
+  .qty-btn:hover {
+    background: var(--surface);
+  }
+
+  .qty-input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    font-weight: 600;
+    background: transparent;
+  }
+
+  .subtotal {
+    font-weight: 700;
+    font-size: 16px;
+    text-align: right;
+  }
+
+  .remove-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 8px;
+    transition: color 0.2s;
+  }
+
+  .remove-btn:hover {
+    color: var(--text);
+  }
+
+  .cart-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
+    margin-top: 40px;
+    padding-top: 20px;
+  }
+
+  .total-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .total-amount {
+    font-size: 28px;
+    font-weight: 800;
+  }
+
+  .checkout-btn {
+    background: var(--text);
+    color: #ffffff;
+    padding: 16px 40px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    border: 1px solid var(--text);
+  }
+
+  .checkout-btn:hover {
+    opacity: 0.9;
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  @media (max-width: 600px) {
+    .cart-item {
+      grid-template-columns: 1fr;
+      text-align: center;
+      justify-items: center;
+    }
+    .cart-left {
+      flex-direction: column;
+    }
+    .cart-footer {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
+  }
+</style>
+
+<div id="cartApp" class="cart-wrapper container">
+
+  <div class="cart-header">
+    <h1 class="cart-title">Your Bag</h1>
+    <span class="cart-count">[[ items.length ]] Items</span>
+  </div>
+
+  <div v-if="items.length === 0" style="text-align:center; padding: 60px 0; color: #666;">
+    <p>Your bag is currently empty.</p>
+    <a href="{{ url_for('home') }}" class="checkout-btn" style="display:inline-block; margin-top:20px;">Continue Shopping</a>
+  </div>
+
+  <div v-for="item in items" :key="item.id" class="cart-item">
+
+    <div class="cart-left">
+      <a :href="'/product/' + item.product.id">
+          <img :src="'/static/uploads/' + item.product.image" :alt="item.product.name">
+      </a>
+      <div style="text-align:left;">
+        <div class="cart-name">[[ item.product.name ]]</div>
+        <div class="cart-price">[[ item.price ]] ៛</div>
+        <small style="color:#999;">Stock: [[ item.stock ]]</small>
+      </div>
+    </div>
+
+    <div class="qty-box">
+      <button class="qty-btn" @click="decrease(item)">-</button>
+      <input class="qty-input" type="number" v-model.number="item.quantity" :max="item.stock" @input="update(item)">
+      <button class="qty-btn" @click="increase(item)">+</button>
+    </div>
+
+    <div class="subtotal">
+      [[ item.price * item.quantity ]] ៛
+    </div>
+
+    <button class="remove-btn" @click="removeItem(item.id)" title="Remove item">
+      &times;
+    </button>
+
+  </div>
+
+  <div class="cart-footer" v-if="items.length > 0">
+    <div style="text-align: right;">
+        <div class="total-label">Subtotal</div>
+        <div class="total-amount">[[ total ]] ៛</div>
+    </div>
+
+    <a href="/payment" class="checkout-btn" :style="{ opacity: total <= 0 ? 0.5 : 1, pointerEvents: total <= 0 ? 'none' : 'auto' }">
+      Proceed to Checkout
+    </a>
+
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+
+  delimiters: ['[[', ']]'],
+
+  data() {
+    return {
+      items: {{ items | tojson }},
+      timer: null
+    }
+  },
+
+  computed: {
+    total() {
+       return this.items.reduce((s, i) => s + i.price * i.quantity, 0);
+    }
+  },
+
+  methods: {
+    increase(item) {
+      if (item.quantity < item.stock) {
+        item.quantity++;
+        this.update(item);
+      }
+    },
+    decrease(item) {
+      if (item.quantity > 1) {
+        item.quantity--;
+        this.update(item);
+      }
+    },
+    update(item) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        fetch("/cart/update", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            item_id: item.id,
+            qty: item.quantity
+          })
+        });
+      }, 300);
+    },
+    removeItem(id) {
+      fetch("/cart/remove", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ item_id: id })
+      });
+      this.items = this.items.filter(i => i.id !== id);
+    }
+  }
+
+}).mount("#cartApp");
+</script>
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends 'pageFront/master.html' %}
+
+{% block content %}
+<style>
+.payment-page {
+  background: #ffffff;
+  min-height: calc(100vh - 80px);
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.checkout-card {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+}
+
+.checkout-header {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 30px;
+  text-align: center;
+  background: #f9f9f9;
+}
+
+.checkout-header h2 {
+  font-size: 24px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 5px 0;
+}
+
+.checkout-header p {
+  font-size: 13px;
+  color: #666666;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.checkout-body {
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.qr-box {
+  background: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.qr-box img {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  display: block;
+}
+
+.total-row {
+  font-size: 16px;
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+.total-row strong {
+  font-size: 24px;
+  color: #000000;
+  font-weight: 800;
+  display: block;
+  margin-top: 5px;
+}
+
+.instruction {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e5e5e5;
+  border-top: 2px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+<div class="payment-page">
+
+  <div class="checkout-card">
+
+    <div class="checkout-header">
+      <h2>Scan to Pay</h2>
+      <p>Use any supported KHQR app</p>
+    </div>
+
+    <div id="app" class="checkout-body">
+
+      <div class="qr-box">
+        <img src="{{ url_for('static', filename='qrcodes/' + filename) }}">
+      </div>
+
+      <div class="total-row">
+        <span>Amount Due</span>
+        <strong>{{ "%.2f"|format(cart_total) }} ៛</strong>
+      </div>
+
+      <div class="instruction">
+
+        <div v-if="!paid" style="color: #666;">
+          <span class="spinner"></span> Awaiting payment confirmation...
+        </div>
+
+        <div v-else style="color: #000; font-weight: 700;">
+          ✓ Payment Confirmed
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      qrcode: {{ qr|tojson }},
+      paid: false,
+      interval: null,
+      stopped: false
+    }
+  },
+
+  methods: {
+    checkStatus() {
+
+      if (this.stopped) return;
+
+      axios.get('/check_status', {
+        params: { qrcode: this.qrcode}
+      }).then(res => {
+
+        const statusRaw =
+          res.data?.data?.status ||
+          res.data?.status ||
+          res.data;
+
+        const status = String(statusRaw).trim().toUpperCase();
+
+        if (status === "PAID" && !this.stopped) {
+
+          this.paid = true;
+          this.stopped = true;
+
+          clearInterval(this.interval);
+          this.interval = null;
+
+          setTimeout(() => {
+            window.location.replace("/confirmation_payment");
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        console.log("check error", err);
+      });
+    }
+  },
+
+  mounted() {
+    this.checkStatus();
+    this.interval = setInterval(this.checkStatus, 3000);
+  },
+
+  beforeUnmount() {
+    clearInterval(this.interval);
+  }
+}).mount("#app");
+</script>
+{% endblock %}

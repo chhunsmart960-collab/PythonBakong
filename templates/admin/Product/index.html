@@ -1,0 +1,148 @@
+{% extends 'admin/layout/master.html' %}
+
+{% block page_title %}
+	Admin | Products
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <!-- Content Header -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Product Management</h1>
+        </div>
+
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="{{ url_for('dashboards') }}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Products</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="container-fluid">
+
+      <div class="card p-3">
+
+        <div class="card-header border-0 pb-0 d-flex justify-content-between align-items-center">
+          <strong style="text-transform: uppercase; letter-spacing: 0.5px; font-size: 14px;">Inventory Overview</strong>
+          <a href="{{ url_for('form_product', action='add') }}" class="btn btn-primary" style="font-size: 12px;">
+            + Add New Product
+          </a>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+
+            <table class="table table-borderless table-striped mt-3">
+
+              <thead>
+                <tr class="bg-primary text-white">
+                  <th>No.</th>
+                  <th>Image</th>
+                  <th>Product Details</th>
+                  <th>Category</th>
+                  <th>Stock</th>
+                  <th>Pricing</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% if products %}
+                  {% for product in products %}
+                  <tr>
+                    <td class="align-middle">{{ loop.index }}</td>
+
+                    <td class="align-middle">
+                      <div style="width: 64px; height: 64px; background: #f9f9f9; border: 1px solid #e5e5e5; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        {% if product.image %}
+                          <img
+                            src="{{ url_for('static', filename='uploads/thumb_' ~ product.image) }}"
+                            onerror="this.onerror=null;this.src='/static/error-image.png'"
+                            style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                          >
+                        {% else %}
+                          <img
+                            src="{{ url_for('static', filename='no-image.png') }}"
+                            style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                          >
+                        {% endif %}
+                      </div>
+                    </td>
+
+                    <td class="align-middle">
+                      <strong style="text-transform: uppercase; font-size: 14px;">{{ product.name }}</strong><br>
+                      <small style="color: #666; display: inline-block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ product.description or 'No description provided.' }}
+                      </small>
+                    </td>
+
+                    <td class="align-middle">
+                      <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #ffffff;">
+                        {{ product.category }}
+                      </span>
+                    </td>
+
+                    <!-- QTY DISPLAY -->
+                    <td class="align-middle">
+                      {% if product.qty <= 0 %}
+                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px dashed #000; color: #000; border-radius: 4px; display: inline-block;">
+                          Sold Out
+                        </span>
+                      {% else %}
+                        <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px; border: 1px solid #000; background: #000; color: #fff; border-radius: 4px; display: inline-block;">
+                          {{ product.qty }} in stock
+                        </span>
+                      {% endif %}
+                    </td>
+
+                    <td class="align-middle">
+                      <div style="font-size: 12px; color: #666; margin-bottom: 2px;">Cost: {{ product.cost }} ៛</div>
+                      <strong style="font-size: 14px;">Price: {{ product.price }} ៛</strong>
+                    </td>
+
+                    <td class="align-middle">
+                      <a class="btn btn-sm btn-outline-secondary" style="font-size: 11px; padding: 6px 10px; margin-right: 4px;"
+                         href="{{ url_for('form_product', action='edit', pro_id=product.id) }}">
+                         Edit
+                      </a>
+
+                      <a class="btn btn-sm btn-outline-danger" style="font-size: 11px; padding: 6px 10px;"
+                         href="{{ url_for('confirm_product', pro_id=product.id) }}">
+                         Delete
+                      </a>
+                    </td>
+
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="7" class="text-center" style="padding: 40px !important; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
+                      No products found
+                    </td>
+                  </tr>
+                {% endif %}
+              </tbody>
+
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'admin/layout/master.html' %}
+
+{% block page_title %}
+	Admin | Product Form
+{% endblock %}
+
+{% block content %}
+<style>
+  .custom-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 8px;
+  }
+  .image-preview-box {
+    border: 1px dashed #cccccc;
+    padding: 30px;
+    border-radius: 4px;
+    background: #f9f9f9;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .image-preview-box img {
+    max-height: 200px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+</style>
+
+<div class="content-wrapper">
+
+  <!-- Header -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">{{ 'Add New Product' if status == 'add' else 'Edit Product' }}</h1>
+        </div>
+
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ url_for('products') }}">Products</a></li>
+            <li class="breadcrumb-item active">{{ 'Add' if status == 'add' else 'Edit' }}</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="container-fluid">
+
+      <div class="card p-3" style="max-width: 800px; margin: 0 auto;">
+
+        <div class="card-header border-0 pb-0">
+          <a href="{{ url_for('products') }}" class="btn btn-outline-secondary" style="font-size: 12px;">← Back to Products</a>
+        </div>
+
+        <div class="card-body mt-2">
+
+          <form
+            method="post"
+            enctype="multipart/form-data"
+            action="{{ url_for('add_product') if status == 'add' else url_for('edit_product') }}"
+          >
+
+            <!-- IMAGE PREVIEW -->
+            <div class="image-preview-box">
+              {% if status == 'add' %}
+                <img src="{{ url_for('static', filename='no-image.png') }}" id="output" class="img-preview">
+              {% else %}
+                <img src="{% if product.image %}
+                          {{ url_for('static', filename='uploads/resized_' ~ product.image) }}
+                        {% else %}
+                          {{ url_for('static', filename='no-image.png') }}
+                        {% endif %}"
+                     id="output"
+                     class="img-preview"
+                     onerror="this.onerror=null;this.src='/static/error-image.png'">
+              {% endif %}
+            </div>
+
+            <!-- IMAGE -->
+            <div class="form-group mb-4">
+              <label class="custom-label">Product Image</label>
+              <input type="file"
+                     class="form-control"
+                     style="padding-bottom: 36px;"
+                     name="image"
+                     accept="image/*"
+                     onchange="loadFile(event)">
+            </div>
+
+            <!-- NAME -->
+            <div class="form-group mb-4">
+              <label class="custom-label">Product Name *</label>
+              <input type="text"
+                     class="form-control"
+                     name="name"
+                     placeholder="Enter product name"
+                     value="{{ product.name if status == 'edit' }}"
+                     required>
+            </div>
+
+            <!-- CATEGORY & QTY ROW -->
+            <div class="row">
+              <div class="col-md-6 form-group mb-4">
+                <label class="custom-label">Category *</label>
+                <select class="form-control" name="category">
+                  {% for item in category %}
+                    <option value="{{ item.id }}"
+                      {{ 'selected' if product and product.category == item.name }}>
+                      {{ item.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-md-6 form-group mb-4">
+                <label class="custom-label">Quantity (Stock) *</label>
+                <input type="number"
+                       class="form-control"
+                       name="qty"
+                       placeholder="0"
+                       value="{{ product.qty if status == 'edit' else 0 }}">
+              </div>
+            </div>
+
+            <!-- COST & PRICE ROW -->
+            <div class="row">
+              <div class="col-md-6 form-group mb-4">
+                <label class="custom-label">Cost Price *</label>
+                <input type="number"
+                       step="any"
+                       class="form-control"
+                       name="cost"
+                       placeholder="0.00"
+                       value="{{ product.cost if status == 'edit' else 0 }}">
+              </div>
+
+              <div class="col-md-6 form-group mb-4">
+                <label class="custom-label">Selling Price *</label>
+                <input type="number"
+                       step="any"
+                       class="form-control"
+                       name="price"
+                       placeholder="0.00"
+                       value="{{ product.price if status == 'edit' else 0 }}">
+              </div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="form-group mb-4">
+              <label class="custom-label">Description</label>
+              <textarea class="form-control"
+                        name="description"
+                        rows="4"
+                        placeholder="Enter detailed product description">{{ product.description if product }}</textarea>
+            </div>
+
+            <!-- HIDDEN -->
+            {% if status == 'edit' %}
+              <input type="hidden" name="product_id" value="{{ product.id }}">
+              <input type="hidden" name="old_image" value="{{ product.image }}">
+            {% endif %}
+
+            <!-- BUTTONS -->
+            <div class="d-flex justify-content-end mt-5 pt-3" style="border-top: 1px solid #e5e5e5;">
+              {% if status == 'add' %}
+                <a href="{{ url_for('products') }}" class="btn btn-outline-secondary mr-2">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Product</button>
+              {% else %}
+                <a href="{{ url_for('products') }}" class="btn btn-outline-secondary mr-2">Cancel</a>
+                <button type="submit" class="btn btn-primary">Update Product</button>
+              {% endif %}
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src);
+    }
+  };
+</script>
+
+{% endblock %}

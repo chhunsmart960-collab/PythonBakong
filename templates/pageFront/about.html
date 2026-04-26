@@ -1,0 +1,75 @@
+{% extends 'pageFront/master.html' %}
+{% block content %}
+<style>
+  .about-page {
+    padding: 80px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .about-page h2 {
+    font-size: 40px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    display: inline-block;
+  }
+
+  .about-page h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .about-page p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 20px;
+  }
+
+  .team-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+
+  .team-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    color: #444;
+  }
+
+  .team-list li strong {
+    color: #000;
+    display: inline-block;
+    width: 150px;
+  }
+</style>
+
+<div class="about-page">
+    <h2>Our Mission</h2>
+    <p>At <strong>Keyz Store</strong>, we strive to deliver high-quality goods that empower your lifestyle and inspire individuality. Our commitment to modern design, excellence, and customer satisfaction drives everything we do.</p>
+
+    <h3>Our History</h3>
+    <p>Founded with a vision for minimal aesthetics, Keyz Store has quickly become a trusted destination for clients worldwide. From essential basics to curated collections, we deliver a refined shopping experience that leaves a lasting impact.</p>
+
+    <h3>Our Team</h3>
+    <ul class="team-list">
+        <li><strong>Jane Doe</strong> – CEO & Visionary</li>
+        <li><strong>John Smith</strong> – Creative Director</li>
+        <li><strong>Alice Johnson</strong> – Head of Operations</li>
+        <li><strong>Bob Brown</strong> – Brand Strategist</li>
+    </ul>
+
+    <h3>Our Values</h3>
+    <p>Integrity, innovation, and refined simplicity are at the heart of our company culture. We believe in continuous evolution, transparent communication, and building authentic relationships with our community.</p>
+</div>
+{% endblock %}

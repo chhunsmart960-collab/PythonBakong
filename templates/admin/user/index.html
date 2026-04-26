@@ -1,0 +1,93 @@
+{% extends 'admin/layout/master.html' %}
+{% block page_title %}
+    Admin | User Management
+{% endblock %}
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">User Management</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ url_for('dashboards') }}">Home</a></li>
+              <li class="breadcrumb-item active">Users</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+          <div class="card p-3">
+              <div class="card-header border-0 pb-0 d-flex justify-content-between align-items-center">
+                  <strong style="text-transform: uppercase; letter-spacing: 0.5px; font-size: 14px;">Registered Users</strong>
+                  <a href="{{ url_for('form_user', action='add') }}" class="btn btn-primary" style="font-size: 12px;">
+                      + Add New User
+                  </a>
+              </div>
+
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-borderless table-striped mt-3">
+                      <thead>
+                        <tr class="bg-primary text-white">
+                            <th>No.</th>
+                            <th>Profile</th>
+                            <th>Username</th>
+                            <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% if users %}
+                          {% for user in users %}
+                              <tr>
+                                <td class="align-middle">{{ loop.index }}</td>
+                                <td class="align-middle">
+                                    <div style="width: 50px; height: 50px; background: #f9f9f9; border: 1px solid #e5e5e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                        {% if user.profile %}
+                                            <img src="{{ url_for('static', filename='uploads/thumb_' ~ user.profile) }}"
+                                                 onerror="this.onerror=null;this.src='/static/error-image.png'"
+                                                 style="width: 100%; height: 100%; object-fit: cover;">
+                                        {% else %}
+                                            <img src="{{ url_for('static', filename='no-image.png') }}"
+                                                 style="width: 100%; height: 100%; object-fit: cover;">
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <strong style="text-transform: uppercase; font-size: 14px;">{{ user.username }}</strong>
+                                </td>
+                                <td class="align-middle">
+                                    <a class="btn btn-sm btn-outline-secondary" style="font-size: 11px; padding: 6px 10px; margin-right: 4px;"
+                                       href="{{ url_for('form_user', action='edit', user_id=user.id) }}">
+                                        Edit
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger" style="font-size: 11px; padding: 6px 10px;"
+                                       href="{{ url_for('confirm_user', user_id=user.id) }}">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                          {% endfor %}
+                      {% else %}
+                          <tr>
+                            <td colspan="4" class="text-center" style="padding: 40px !important; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
+                              No users found
+                            </td>
+                          </tr>
+                      {% endif %}
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

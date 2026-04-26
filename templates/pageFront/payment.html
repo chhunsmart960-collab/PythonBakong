@@ -1,0 +1,132 @@
+{% extends 'pageFront/master.html' %}
+
+{% block content %}
+
+<style>
+.payment-page {
+  background: #ffffff;
+  min-height: calc(100vh - 80px);
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.checkout-card {
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+}
+
+.checkout-header {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 30px;
+  text-align: center;
+  background: #f9f9f9;
+}
+
+.checkout-header h2 {
+  font-size: 24px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 5px 0;
+}
+
+.checkout-header p {
+  font-size: 13px;
+  color: #666666;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.checkout-body {
+  padding: 30px;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  background: #f9f9f9;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #000000;
+  background: #ffffff;
+}
+
+.btn-black {
+  width: 100%;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+  padding: 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-black:hover {
+  background: #ffffff;
+  color: #000000;
+}
+</style>
+
+<div class="payment-page">
+  <div class="checkout-card">
+
+    <div class="checkout-header">
+      <h2>Checkout</h2>
+      <p>Secure Payment · KHQR / Bakong</p>
+    </div>
+
+    <div class="checkout-body">
+
+      <form action="{{ url_for('payment') }}" method="POST">
+
+        <div class="field">
+          <input type="text" name="customer_name" placeholder="Full Name" required>
+        </div>
+
+        <div class="field">
+          <input type="email" name="email" placeholder="Email Address" required>
+        </div>
+
+        <div class="field">
+          <input type="text" name="phone" placeholder="Phone Number" required>
+        </div>
+
+        <div class="field">
+          <input type="text" name="address" placeholder="Shipping Address" required>
+        </div>
+
+        <button type="submit" class="btn-black">
+          Generate KHQR
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'admin/layout/master.html' %}
+
+{% block page_title %}
+Admin | Confirm Delete User
+{% endblock %}
+
+{% block content %}
+<style>
+  .confirm-card {
+    border: 1px solid #e5e5e5 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+    background: #ffffff !important;
+    max-width: 600px;
+    margin: 40px auto;
+  }
+  .confirm-card-header {
+    background: #f9f9f9 !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    padding: 24px !important;
+    text-align: center;
+  }
+  .confirm-title {
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    color: #000000 !important;
+    letter-spacing: 0.5px;
+    font-size: 18px !important;
+    margin: 0;
+  }
+  .target-box {
+    background: #ffffff !important;
+    border: 1px solid #000000 !important;
+    color: #000000 !important;
+    border-radius: 4px !important;
+    padding: 20px !important;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+</style>
+
+<div class="content-wrapper">
+
+  <!-- Content Header -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Confirm Action</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="{{ url_for('users') }}">Users</a>
+            </li>
+            <li class="breadcrumb-item active">Delete</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+
+      <div class="card confirm-card">
+        <div class="confirm-card-header">
+          <h3 class="confirm-title">
+            Delete User Account
+          </h3>
+        </div>
+
+        <div class="card-body p-4">
+          <div class="text-center">
+            <p style="color: #666666; font-weight: 500; margin-bottom: 24px;">
+              This action is permanent and cannot be undone. Are you sure you want to remove the following user account?
+            </p>
+          </div>
+
+          <div class="target-box">
+              <ul class="mb-0 list-unstyled">
+                <li>
+                  <span style="font-size: 12px; color: #666; display: block; margin-bottom: 5px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">TARGET USER</span>
+                  <strong style="font-size: 20px; text-transform: uppercase;">{{ user.username }}</strong>
+                </li>
+              </ul>
+          </div>
+
+          <form
+                  method="post"
+                  action="{{ url_for('delete_user') }}"
+          >
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <input type="hidden" name="delete_profile" value="{{ user.profile }}">
+            <div class="d-flex justify-content-between mt-4">
+              <a href="{{ url_for('users') }}" class="btn btn-outline-secondary" style="width: 48%;">
+                Cancel
+              </a>
+
+              <button type="submit" class="btn btn-danger" style="width: 48%;">
+                Yes, Delete
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+{% endblock %}
